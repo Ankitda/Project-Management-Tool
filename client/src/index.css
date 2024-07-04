@@ -34,7 +34,7 @@
 @keyframes rotate-in-up-left {
   0% {
     transform-origin: left bottom;
-    transform: rotate(90deg);
+    transform: rotate(360deg);
     opacity: 0;
   }
   100% {
