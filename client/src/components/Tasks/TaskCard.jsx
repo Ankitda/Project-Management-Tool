@@ -94,11 +94,11 @@ const TaskCard = ({ task }) => {
                             {task?.subTasks[0].title}
                         </h5>
 
-                        <div className='p-4 space-x-8'>
+                        <div className='py-4 space-x-8'>
                             <span className='text-sm text-gray-600'>
                                 {formatDate(new Date(task?.subTasks[0]?.date))}
                             </span>
-                            <span className='bg-blue-600/10 px-3 py-1 rounded0full text-blue-700 font-medium'>
+                            <span className='bg-blue-600/10 px-3 py-1 rounded-full text-blue-700 font-medium'>
                                 {task?.subTasks[0].tag}
                             </span>
                         </div>

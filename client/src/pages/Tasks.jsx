@@ -10,11 +10,11 @@ import Button from "../components/Button";
 import Tabs from "../components/Tasks/Tabs";
 import TaskMenu from "../components/Tasks/TaskMenu";
 import BoardView from "../components/Tasks/BoardView";
-import Table from "../components/Tasks/Table";
+import TaskTable from "../components/Tasks/TaskTable";
 import { tasks } from "../assets/data";
 import TaskCard from "../components/Tasks/TaskCard";
 // import Table from "../components/task/Table";
-// import AddTask from "../components/task/AddTask";
+import AddTask from "../components/Tasks/AddTask";
 
 const TABS = [
   { title: "Board View", icon: <MdGridView /> },
@@ -73,10 +73,12 @@ const Tasks = () => {
 
         ) : (
           <div className='w-full'>
-            <Table tasks={tasks} />
+            <TaskTable tasks={tasks} />
           </div>
         )}
       </Tabs>
+
+      {open && <AddTask open={open} setOpen={setOpen} />}
 
     </div>
   )

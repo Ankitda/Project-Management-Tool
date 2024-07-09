@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOpenSidebar } from "../redux/slices/authSlice";
 import UserAvatar from "./UserAvatar";
 import NotificationPanel from "./NotificationPanel";
-// import NotificationPanel from "./NotificationPanel";
 
 // dummy data for notification 
 
