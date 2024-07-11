@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import Textbox from "../TextBox";
 import { useForm } from "react-hook-form";
-// import UserList from "./UserList";
-// import SelectList from "../SelectList";
+import UserList from "./UserList";
+import SelectedList from "./SelectedList";
 import { BiImages } from "react-icons/bi";
 import Button from "../Button";
 
@@ -21,11 +21,9 @@ const AddTask = ({ open, setOpen }) => {
         formState: { errors },
     } = useForm();
 
-    const [team, setTeam] = useState(task?.team || []);
-    const [stage, setStage] = useState(task?.stage?.toUpperCase() || LISTS[0]);
-    const [priority, setPriority] = useState(
-        task?.priority?.toUpperCase() || PRIORIRY[2]
-    );
+    const [team, setTeam] = useState([]);
+    const [stage, setStage] = useState('');
+    const [priority, setPriority] = useState(PRIORIRY[2]);
     const [assets, setAssets] = useState([]);
     const [uploading, setUploading] = useState(false);
 
@@ -33,10 +31,10 @@ const AddTask = ({ open, setOpen }) => {
 
     const handleSelect = (e) => {
         setAssets(e.target.files);
-        // setUploading(true);
+        setUploading(true);
     };
 
-    console.log("assets", uploading);
+    // console.log("assets", uploading);
 
     const close = () => {
         setOpen(false);
@@ -44,8 +42,6 @@ const AddTask = ({ open, setOpen }) => {
 
     return (
         <>
-
-
             <Dialog open={open} as="div" className="w-full fixed inset-0 flex items-center justify-center z-50" onClose={close}>
                 <div className="absolute inset-0 bg-black opacity-50"></div>
                 <div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
@@ -77,15 +73,16 @@ const AddTask = ({ open, setOpen }) => {
                                                     error={errors.title ? errors.title.message : ""}
                                                 />
 
-                                                {/* <UserList setTeam={setTeam} team={team} /> */}
+                                                <UserList setTeam={setTeam} />
 
                                                 <div className='flex gap-4'>
-                                                    {/* <SelectList
+
+                                                    <SelectedList
                                                         label='Task Stage'
                                                         lists={LISTS}
-                                                        selected={stage}
-                                                        setSelected={setStage}
-                                                    /> */}
+                                                        stageSelected={stage}
+                                                        handleStageSelected={setStage}
+                                                    />
 
                                                     <div className='w-full'>
                                                         <Textbox
@@ -103,44 +100,51 @@ const AddTask = ({ open, setOpen }) => {
                                                 </div>
 
                                                 <div className='flex gap-4'>
-                                                    {/* <SelectList
+
+                                                    <SelectedList
                                                         label='Priority Level'
                                                         lists={PRIORIRY}
-                                                        selected={priority}
-                                                        setSelected={setPriority}
-                                                    /> */}
+                                                        stageSelected={priority}
+                                                        handleStageSelected={setPriority}
+                                                    />
 
                                                     <div className='w-full flex items-center justify-center mt-4'>
-                                                        <label
-                                                            className='flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer my-4'
-                                                            htmlFor='imgUpload'
-                                                        >
-                                                            <input
-                                                                type='file'
-                                                                className='hidden'
-                                                                id='imgUpload'
-                                                                onChange={(e) => handleSelect(e)}
-                                                                accept='.jpg, .png, .jpeg'
-                                                                multiple={true}
-                                                            />
-                                                            <BiImages />
-                                                            <span>Add Assets</span>
-                                                        </label>
+
+                                                        {
+                                                            uploading ? (
+                                                                <span className='text-xl py-2 text-red-500'>
+                                                                    Asset uploaded
+                                                                </span>
+                                                            ) : (
+
+                                                                <label
+                                                                    className='flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer my-4'
+                                                                    htmlFor='imgUpload'
+                                                                >
+                                                                    <input
+                                                                        type='file'
+                                                                        className='hidden'
+                                                                        id='imgUpload'
+                                                                        onChange={(e) => handleSelect(e)}
+                                                                        accept='.jpg, .png, .jpeg'
+                                                                        multiple={true}
+                                                                    />
+                                                                    <BiImages />
+                                                                    <span>Add Assets</span>
+                                                                </label>
+
+                                                            )
+                                                        }
                                                     </div>
                                                 </div>
 
-                                                <div className='bg-gray-50 py-6 sm:flex sm:flex-row-reverse gap-4'>
-                                                    {uploading ? (
-                                                        <span className='text-sm py-2 text-red-500'>
-                                                            Uploading assets
-                                                        </span>
-                                                    ) : (
-                                                        <Button
-                                                            label='Submit'
-                                                            type='submit'
-                                                            className='bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700  sm:w-auto'
-                                                        />
-                                                    )}
+                                                <div className='py-6 sm:flex sm:flex-row-reverse gap-4'>
+
+                                                    <Button
+                                                        label='Submit'
+                                                        type='submit'
+                                                        className='bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700  sm:w-auto'
+                                                    />
 
                                                     <Button
                                                         type='button'
@@ -158,40 +162,8 @@ const AddTask = ({ open, setOpen }) => {
                     </div>
                 </div>
             </Dialog>
-
-
-
-
         </>
     );
 };
 
 export default AddTask;
-
-
-// <Dialog open={isOpen} as="div" className="relative z-10 focus:outline-none" onClose={close}>
-//         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-//           <div className="flex min-h-full items-center justify-center p-4">
-//             <DialogPanel
-//               transition
-//               className="w-full max-w-md rounded-xl bg-white/5 p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
-//             >
-//               <DialogTitle as="h3" className="text-base/7 font-medium text-white">
-//                 Payment successful
-//               </DialogTitle>
-//               <p className="mt-2 text-sm/6 text-white/50">
-//                 Your payment has been successfully submitted. We’ve sent you an email with all of the details of your
-//                 order.
-//               </p>
-//               <div className="mt-4">
-//                 <Button
-//                   className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
-//                   onClick={close}
-//                 >
-//                   Got it, thanks!
-//                 </Button>
-//               </div>
-//             </DialogPanel>
-//           </div>
-//         </div>
-//       </Dialog>
