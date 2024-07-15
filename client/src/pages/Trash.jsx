@@ -10,6 +10,7 @@ import {
 import { tasks } from "../assets/data";
 import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils/utility";
+import ConfirmationDialog from "../components/Tasks/ConfirmationDialog";
 // import AddUser from "../components/AddUser";
 // import ConfirmatioDialog from "../components/Dialogs";
 
@@ -26,6 +27,7 @@ const Trash = () => {
   const [type, setType] = useState("delete");
   const [selected, setSelected] = useState("");
 
+  console.log("selected", open);
   const deleteAllClick = () => {
     setType("deleteAll");
     setMsg("Do you want to permenantly delete all items?");
@@ -38,11 +40,9 @@ const Trash = () => {
     setOpenDialog(true);
   };
 
-  const deleteClick = (id) => {
-    setType("delete");
-    setSelected(id);
-    setOpenDialog(true);
-  };
+  const handleDelete = (item_id) => {
+    setOpen(true);
+  }
 
   const restoreClick = (id) => {
     setSelected(id);
@@ -96,7 +96,7 @@ const Trash = () => {
         />
         <Button
           icon={<MdDelete className='text-xl text-red-600' />}
-          onClick={() => deleteClick(item._id)}
+          onClick={() => handleDelete(item._id)}
         />
       </td>
     </tr>
@@ -121,7 +121,7 @@ const Trash = () => {
               label='Delete All'
               icon={<MdDelete className='text-lg hidden md:flex' />}
               className='flex flex-row-reverse gap-1 items-center  text-red-600 text-sm md:text-base rounded-md 2xl:py-2.5'
-              onClick={() => deleteAllClick()}
+              onClick={() => setOpen(true)}
             />
           </div>
         </div>
@@ -141,15 +141,7 @@ const Trash = () => {
 
       {/* <AddUser open={open} setOpen={setOpen} /> */}
 
-      {/* <ConfirmatioDialog
-        open={openDialog}
-        setOpen={setOpenDialog}
-        msg={msg}
-        setMsg={setMsg}
-        type={type}
-        setType={setType}
-        onClick={() => deleteRestoreHandler()}
-      /> */}
+      <ConfirmationDialog open={open} setOpen={setOpen} />
     </>
   );
 };

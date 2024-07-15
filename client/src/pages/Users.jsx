@@ -5,6 +5,7 @@ import { IoMdAdd } from "react-icons/io";
 import { summary } from "../assets/data";
 import { getInitials } from "../utils/utility";
 import clsx from "clsx";
+import AddUser from "../components/Users/AddUser";
 // import ConfirmatioDialog, { UserAction } from "../components/Dialogs";
 // import AddUser from "../components/AddUser";
 
@@ -114,12 +115,10 @@ const Users = () => {
         </div>
       </div>
 
-      {/* <AddUser
+      <AddUser
         open={open}
         setOpen={setOpen}
-        userData={selected}
-        key={new Date().getTime().toString()}
-      /> */}
+      />
 
       {/* <ConfirmatioDialog
         open={openDialog}
