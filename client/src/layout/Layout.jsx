@@ -11,14 +11,14 @@ const Layout = () => {
     const location = useLocation();
 
     return user ? (
-        <div className='w-full h-screen flex flex-col md:flex-row'>
+        <div className='relative w-full md:h-screen flex flex-col md:flex-row'>
             <div className='w-1/5 h-screen bg-white sticky top-0 hidden md:block'>
                 <Sidebar />
             </div>
 
             <MobileSidebar />
 
-            <div className='flex-1 overflow-y-auto'>
+            <div className='flex-shrink-0 md:flex-auto overflow-y-auto'>
                 <Navbar />
 
                 <div className='p-4 2xl:px-10'>

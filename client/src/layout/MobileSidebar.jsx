@@ -31,7 +31,7 @@ const MobileSidebar = () => {
                     <div
                         ref={(node) => (mobileMenuRef.current = node)}
                         className={clsx(
-                            "md:hidden w-full h-full bg-black/40 transition-all duration-700 transform ",
+                            "absolute md:hidden w-full h-screen bg-black/40 transition-all duration-700 transform z-50",
                             isSidebarOpen ? "translate-x-0" : "translate-x-full"
                         )}
                         onClick={() => closeSidebar()}

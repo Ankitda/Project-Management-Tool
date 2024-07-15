@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App>
       <Provider store={store}>
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </Provider>
     </App>
   </React.StrictMode>,
