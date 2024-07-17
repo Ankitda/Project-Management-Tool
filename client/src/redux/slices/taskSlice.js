@@ -1,11 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 import { tasks } from "../../assets/data";
 
 const initialState = {
     tasks: tasks,
-    completedTasks : [],
-    inProgressTasks : [],
-    todoTasks : []
 };
 
 const taskSlice = createSlice({
@@ -13,20 +10,22 @@ const taskSlice = createSlice({
     initialState,
     reducers: {
         addTask : (state, action) => {
-            state.tasks = action.payload;
+            console.log("task added", action.payload);
+            state.tasks.push(action.payload);
         },
-        addCompletedTask : (state, action) => {
-            state.completedTasks = action.payload;
-        },
-        addInProgressTask : (state, action) => {
-            state.inProgressTasks = action.payload;
-        },
-        addTodoTask : (state, action) => {
-            state.todoTasks = action.payload;
+        addSubTasks : (state, action) => {
+
+            const { data, index } = action.payload;
+
+            const subTask = state.tasks[index].subTasks;
+            
+            if (index !== -1) {
+                subTask.push(data);
+            }
         }
     }
 });
 
-export const {addTask, addCompletedTask, addInProgressTask, addTodoTask} = taskSlice.actions;
+export const {addTask, addSubTasks} = taskSlice.actions;
 
 export default taskSlice.reducer;

@@ -19,9 +19,18 @@ const UserList = ({ setTeam }) => {
         setSelected(person)
         setCurrentUser(person[person?.length - 1].name);
         if (person?.length > 1) {
-            setTeam(person.map(user => user._id))
+            setTeam(person.map(user => {
+                return {
+                    _id: user._id,
+                    name: user.name,
+                    title: user.title,
+                    email: user.email
+                }
+            }))
         }
     }
+
+    // console.log("selected", selected);
 
     return (
         <Field as='div' className={"w-full flex flex-col gap-1"}>

@@ -3,8 +3,13 @@ import { useForm } from "react-hook-form";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import Textbox from "../TextBox";
 import Button from "../Button";
+import { useDispatch, useSelector } from "react-redux";
+import { addSubTasks } from "../../redux/slices/taskSlice";
 
-const AddSubTask = ({ open, setOpen, id }) => {
+const AddSubTask = ({ open, setOpen, id}) => {
+
+    const {tasks} = useSelector((state) => state.task);
+    const dispatch = useDispatch();
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     // const [addSbTask] = useCreateSubTaskMutation();
@@ -20,6 +25,20 @@ const AddSubTask = ({ open, setOpen, id }) => {
         //   console.log(err);
         //   toast.error(err?.data?.message || err.error);
         // }
+
+        const index = tasks.findIndex((task) => task._id === id);
+
+        let newSubTask = {
+            _id: Date.now(),
+            title: data?.title,
+            date: data?.date,
+            tag : data?.tag
+        }
+
+        console.log(index);
+
+        dispatch(addSubTasks({ data: newSubTask, index }));
+
     };
 
     return (

@@ -14,6 +14,7 @@ import UserInfo from "../UserInfo";
 import { IoMdAdd } from "react-icons/io";
 import AddSubTask from "./AddSubtask"
 import TaskDialog from "./TaskDialog";
+import { tasks } from "../../assets/data";
 
 
 const ICONS = {
@@ -126,7 +127,7 @@ const TaskCard = ({ task }) => {
                 }
             </div>
 
-            <AddSubTask open={open} setOpen={setOpen} id={task._id} />
+            <AddSubTask open={open} setOpen={setOpen} id={task._id} specificTask={task} />
         </>
     );
 };

@@ -1,4 +1,3 @@
-import React from "react";
 import {
     MdDashboard,
     MdOutlineAddTask,
@@ -34,7 +33,7 @@ const linkData = [
         icon: <MdOutlinePendingActions />,
     },
     {
-        label: "To Do",
+        label: "Todo",
         link: "todo/todo",
         icon: <MdOutlinePendingActions />,
     },
@@ -55,7 +54,7 @@ const NavLink = ({ el, path, closeSidebar }) => {
     return (
         <Link
             to={el.link}
-            onClick={closeSidebar}
+            onClick={ closeSidebar }
             className={clsx(
                 "w-full lg:w-3/4 flex gap-2 px-3 py-2 rounded-full items-center text-gray-800 text-base hover:bg-[#2564ed2d]",
                 path === el.link.split("/")[0] ? "bg-blue-700 text-neutral-100" : ""
@@ -68,6 +67,7 @@ const NavLink = ({ el, path, closeSidebar }) => {
 };
 
 const Sidebar = () => {
+
     const { user } = useSelector((state) => state.auth);
 
     const dispatch = useDispatch();
@@ -79,9 +79,8 @@ const Sidebar = () => {
 
     const closeSidebar = () => {
         dispatch(setOpenSidebar(false));
-        console.log("sidebar closed clicked");
     };
-
+    
     return (
         <div className='w-full  h-full flex flex-col gap-6 p-5'>
             <h1 className='flex gap-1 items-center'>
@@ -97,12 +96,13 @@ const Sidebar = () => {
                 ))}
             </div>
 
-            <div className=''>
+            {/* <div className=''>
                 <button className='w-full flex gap-2 p-2 items-center text-lg text-gray-800'>
                     <MdSettings />
                     <span>Settings</span>
                 </button>
-            </div>
+            </div> */}
+
         </div>
     );
 };

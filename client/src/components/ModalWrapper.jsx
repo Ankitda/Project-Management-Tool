@@ -12,7 +12,7 @@ const ModalWrapper = ({children, open, close}) => {
                     >
                         <div className='bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
                             <div className='sm:flex sm:items-start'>
-                                <div className='w-full mt-3 sm:ml-4 sm:mt-0 sm:text-left'>
+                                <div className='w-full mt-3 sm:ml-2 sm:mt-0 sm:text-left'>
 
                                    {children}
 
