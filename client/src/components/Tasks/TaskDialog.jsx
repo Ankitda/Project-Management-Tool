@@ -1,17 +1,32 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { AiTwotoneFolderOpen } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
-import { HiDuplicate } from "react-icons/hi";
-import { MdAdd, MdOutlineEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTask, setRefresh } from '../../redux/slices/taskSlice';
+import { addTrashTasks } from '../../redux/slices/trashSlice';
 
 import { useNavigate } from "react-router-dom"
-
-
+import { useState } from 'react';
 
 const TaskDialog = ({task}) => {
     
+    const { tasks, refresh } = useSelector((state) => state.task)
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+
+    const deleteClicks = () => {
+        const dataDeleted = tasks.filter((el) => el._id !== task._id);
+        dispatch(deleteTask(dataDeleted));
+        dispatch(addTrashTasks(task));
+        dispatch(setRefresh(!refresh));
+    }
+
+    // const editTask = () => {
+    //     setOpen(true);
+    //     console.log(task);        
+    // }
     
     const items = [
         {
@@ -19,11 +34,11 @@ const TaskDialog = ({task}) => {
             icon: <AiTwotoneFolderOpen className='mr-2 h-5 w-5' aria-hidden='true' />,
             onClick: () => navigate(`/task/${task._id}`),
         },
-        {
-            label: "Edit",
-            icon: <MdOutlineEdit className='mr-2 h-5 w-5' aria-hidden='true' />,
-            onClick: () => setOpenEdit(true),
-        }
+        // {
+        //     label: "Edit",
+        //     icon: <MdOutlineEdit className='mr-2 h-5 w-5' aria-hidden='true' />,
+        //     onClick: () => editTask(),
+        // }
     ];
 
     return (
@@ -64,7 +79,10 @@ const TaskDialog = ({task}) => {
                 </div>
             </MenuItems>
 
+        
+
         </Menu>
+
     )
 }
 

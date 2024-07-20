@@ -10,10 +10,21 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         addUser: (state, action) => {
-            state.users.push(action.payload);
+            if(Array.isArray(action.payload)){
+                state.users = [...state.users, ...action.payload];
+            }else{
+                state.users = [...state.users, action.payload];
+            }
         },
+        deleteUser: (state, action) => {
+            // console.log("delete user", action.payload);
+            state.users = [...action.payload];
+        },
+        deleteAllUsers : (state) => {
+            state.users = [];
+        }
     },
 })
 
-export const { addUser } = userSlice.actions;
+export const { addUser, deleteUser, deleteAllUsers } = userSlice.actions;
 export default userSlice.reducer

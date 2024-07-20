@@ -1,31 +1,38 @@
 import { useState } from "react";
-// import Title from "../components/Title";
 import Button from "../components/Button";
 import { IoMdAdd } from "react-icons/io";
-import { summary } from "../assets/data";
 import { getInitials } from "../utils/utility";
 import clsx from "clsx";
 import AddUser from "../components/Users/AddUser";
-// import ConfirmatioDialog, { UserAction } from "../components/Dialogs";
-// import AddUser from "../components/AddUser";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteUser } from "../redux/slices/userSlice";
+import ConfirmationDialog from "../components/Tasks/ConfirmationDialog";
+import EditTask from "../components/Users/EditUser";
 
 const Users = () => {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [openAction, setOpenAction] = useState(false);
-  const [selected, setSelected] = useState(null);
 
-  const userActionHandler = () => {};
-  const deleteHandler = () => {};
+  const { users } = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+
+  const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [userSelected, setUserSelected] = useState({});
+
+  const deleteHandler = () => {
+    const newUsers = users.filter((user) => user._id !== userId);
+    dispatch(deleteUser(newUsers));
+  };
 
   const deleteClick = (id) => {
-    setSelected(id);
+    setUserId(id);
     setOpenDialog(true);
   };
 
   const editClick = (el) => {
-    setSelected(el);
-    setOpen(true);
+    setUserSelected(el);
+    setOpenEdit(true);
   };
 
   const TableHeader = () => (
@@ -90,9 +97,9 @@ const Users = () => {
     <>
       <div className='w-full md:px-1 px-0 mb-6'>
         <div className='flex items-center justify-between mb-8'>
-        <h2 className="text-2xl font-semibold capitalize">
-          Team Members
-        </h2>
+          <h2 className="text-2xl font-semibold capitalize">
+            Team Members
+          </h2>
           <Button
             label='Add New User'
             icon={<IoMdAdd className='text-lg' />}
@@ -106,7 +113,7 @@ const Users = () => {
             <table className='w-full'>
               <TableHeader />
               <tbody>
-                {summary.users?.map((user, index) => (
+                {users?.map((user, index) => (
                   <TableRow key={index} user={user} />
                 ))}
               </tbody>
@@ -120,17 +127,17 @@ const Users = () => {
         setOpen={setOpen}
       />
 
-      {/* <ConfirmatioDialog
+      <ConfirmationDialog
         open={openDialog}
         setOpen={setOpenDialog}
         onClick={deleteHandler}
       />
 
-      <UserAction
-        open={openAction}
-        setOpen={setOpenAction}
-        onClick={userActionHandler}
-      /> */}
+      <EditTask
+        open={openEdit}
+        setOpen={setOpenEdit}
+        defaultValues={userSelected}
+      />
 
     </>
   );

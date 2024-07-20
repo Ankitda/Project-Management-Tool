@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { BiMessageAltDetail } from "react-icons/bi";
 import {
   MdAttachFile,
@@ -12,7 +11,9 @@ import clsx from "clsx";
 import { FaList } from "react-icons/fa";
 import UserInfo from "../UserInfo";
 import Button from "../Button";
-// import ConfirmatioDialog from "../Dialogs";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTask, setRefresh } from "../../redux/slices/taskSlice";
+import { addTrashTasks } from "../../redux/slices/trashSlice";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -21,15 +22,16 @@ const ICONS = {
 };
 
 const TaskTable = ({ tasks }) => {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selected, setSelected] = useState(null);
 
-  const deleteClicks = (id) => {
-    setSelected(id);
-    setOpenDialog(true);
-  };
+  const { refresh } = useSelector((state) => state.task);
+  const dispatch = useDispatch();
 
-  const deleteHandler = () => {};
+  const deleteClicks = (id, task) => {
+    const dataDeleted = tasks.filter((el) => el._id !== id);
+    dispatch(deleteTask(dataDeleted));
+    dispatch(addTrashTasks(task));
+    dispatch(setRefresh(!refresh));
+  }
 
   const TableHeader = () => (
     <thead className='w-full border-b border-gray-300'>
@@ -107,17 +109,17 @@ const TaskTable = ({ tasks }) => {
       </td>
 
       <td className='py-2 flex gap-2 md:gap-4 justify-end'>
-        <Button
+        {/* <Button
           className='text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base'
           label='Edit'
           type='button'
-        />
+        /> */}
 
         <Button
           className='text-red-700 hover:text-red-500 sm:px-0 text-sm md:text-base'
           label='Delete'
           type='button'
-          onClick={() => deleteClicks(task._id)}
+          onClick={() => deleteClicks(task._id, task)}
         />
       </td>
     </tr>
@@ -136,13 +138,6 @@ const TaskTable = ({ tasks }) => {
           </table>
         </div>
       </div>
-
-      {/* TODO */}
-      {/* <ConfirmatioDialog
-        open={openDialog}
-        setOpen={setOpenDialog}
-        onClick={deleteHandler}
-      /> */}
 
     </>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import moment from "moment";
 import { FaBug, FaTasks, FaThumbsUp, FaUser } from "react-icons/fa";
@@ -18,6 +18,7 @@ import { tasks } from "../assets/data";
 import Tabs from "../components/Tasks/Tabs";
 import { PRIOTITYSTYELS, TASK_TYPE, getInitials } from "../utils/utility";
 import Activities from "../components/TaskDetail/Activities";
+import { useSelector } from "react-redux";
 // import Loading from "../components/Loader";
 
 const ICONS = {
@@ -37,59 +38,23 @@ const TABS = [
   { title: "Activities/Timeline", icon: <RxActivityLog /> },
 ];
 
-const TASKTYPEICON = {
-  commented: (
-    <div className='w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white'>
-      <MdOutlineMessage />,
-    </div>
-  ),
-  started: (
-    <div className='w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white'>
-      <FaThumbsUp size={20} />
-    </div>
-  ),
-  assigned: (
-    <div className='w-6 h-6 flex items-center justify-center rounded-full bg-gray-500 text-white'>
-      <FaUser size={14} />
-    </div>
-  ),
-  bug: (
-    <div className='text-red-600'>
-      <FaBug size={24} />
-    </div>
-  ),
-  completed: (
-    <div className='w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white'>
-      <MdOutlineDoneAll size={24} />
-    </div>
-  ),
-  "in progress": (
-    <div className='w-8 h-8 flex items-center justify-center rounded-full bg-violet-600 text-white'>
-      <GrInProgress size={16} />
-    </div>
-  ),
-};
-
-const act_types = [
-  "Started",
-  "Completed",
-  "In Progress",
-  "Commented",
-  "Bug",
-  "Assigned",
-];
-
 const TaskDetail = () => {
 
   const { id } = useParams();
 
+  const { tasks } = useSelector((state) => state.task);
   const [selected, setSelected] = useState(0);
-  const task = tasks[3];
+  const [taskDetail, setTaskDetail] = useState([]);
 
+  useEffect(() => {
+    if (id) {
+      setTaskDetail(tasks.filter((task) => task._id === id));
+    }
+  }, [id])
 
   return (
     <div className='w-full flex flex-col gap-3 overflow-y-hidden'>
-      <h1 className='text-2xl text-gray-600 font-bold'>{task?.title}</h1>
+      <h1 className='text-2xl text-gray-600 font-bold'>{taskDetail[0]?.title}</h1>
 
       <Tabs tabs={TABS} setSelected={setSelected}>
         {selected === 0 ? (
@@ -100,40 +65,40 @@ const TaskDetail = () => {
                 <div
                   className={clsx(
                     "flex gap-1 items-center text-base font-semibold px-3 py-1 rounded-full",
-                    PRIOTITYSTYELS[task?.priority],
-                    bgColor[task?.priority]
+                    PRIOTITYSTYELS[taskDetail[0]?.priority],
+                    bgColor[taskDetail[0]?.priority]
                   )}
                 >
-                  <span className='text-lg'>{ICONS[task?.priority]}</span>
-                  <span className='uppercase'>{task?.priority} Priority</span>
+                  <span className='text-lg'>{ICONS[taskDetail[0]?.priority]}</span>
+                  <span className='uppercase'>{taskDetail[0]?.priority} Priority</span>
                 </div>
 
                 <div className={clsx("flex items-center gap-2")}>
                   <div
                     className={clsx(
                       "w-4 h-4 rounded-full",
-                      TASK_TYPE[task.stage]
+                      TASK_TYPE[taskDetail[0]?.stage]
                     )}
                   />
-                  <span className='text-black uppercase'>{task?.stage}</span>
+                  <span className='text-black uppercase'>{taskDetail[0]?.stage}</span>
                 </div>
               </div>
 
               <p className='text-gray-500'>
-                Created At: {new Date(task?.date).toDateString()}
+                Created At: {new Date(taskDetail[0]?.date).toDateString()}
               </p>
 
               <div className='flex items-center gap-8 p-4 border-y border-gray-200'>
                 <div className='space-x-2'>
                   <span className='font-semibold'>Assets :</span>
-                  <span>{task?.assets?.length}</span>
+                  <span>{taskDetail[0]?.assets?.length}</span>
                 </div>
 
                 <span className='text-gray-400'>|</span>
 
                 <div className='space-x-2'>
                   <span className='font-semibold'>Sub-Task :</span>
-                  <span>{task?.subTasks?.length || 0}</span>
+                  <span>{taskDetail[0]?.subTasks?.length || 0}</span>
                 </div>
               </div>
 
@@ -142,7 +107,7 @@ const TaskDetail = () => {
                   TASK TEAM
                 </p>
                 <div className='space-y-3'>
-                  {task?.team?.map((m, index) => (
+                  {taskDetail[0]?.team?.map((m, index) => (
                     <div
                       key={index}
                       className='flex gap-4 py-2 items-center border-t border-gray-200'
@@ -171,7 +136,7 @@ const TaskDetail = () => {
                   SUB-TASKS
                 </p>
                 <div className='space-y-8'>
-                  {task?.subTasks?.map((el, index) => (
+                  {taskDetail[0]?.subTasks?.map((el, index) => (
                     <div key={index} className='flex gap-3'>
                       <div className='w-10 h-10 flex items-center justify-center rounded-full bg-violet-50-200'>
                         <MdTaskAlt className='text-violet-600' size={26} />
@@ -199,22 +164,27 @@ const TaskDetail = () => {
             {/* RIGHT */}
             <div className='w-full md:w-1/2 space-y-8'>
               <p className='text-lg font-semibold'>ASSETS</p>
-
-              <div className='w-full grid grid-cols-2 gap-4'>
-                {task?.assets?.map((el, index) => (
-                  <img
-                    key={index}
-                    src={el}
-                    alt={task?.title}
-                    className='w-full rounded h-28 md:h-36 2xl:h-52 cursor-pointer transition-all duration-700 hover:scale-125 hover:z-50'
-                  />
-                ))}
-              </div>
+              {
+                taskDetail[0]?.assets?.length === 0 ? (
+                  <p className='text-gray-500'>No Assets</p>
+                ) : (
+                  <div className='w-full grid grid-cols-2 gap-4'>
+                    {taskDetail[0]?.assets?.map((el, index) => (
+                      <img
+                        key={index}
+                        src={el}
+                        alt={taskDetail?.title}
+                        className='w-full rounded h-28 md:h-36 2xl:h-52 cursor-pointer transition-all duration-700 hover:scale-125 hover:z-50'
+                      />
+                    ))}
+                  </div>
+                )
+              }
             </div>
           </div>
         ) : (
           <>
-            <Activities activity={task?.activities} />
+            <Activities activity={taskDetail[0]?.activities} taskId={id} />
           </>
         )}
       </Tabs>

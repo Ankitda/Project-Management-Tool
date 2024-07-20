@@ -1,20 +1,18 @@
-import { useForm } from "react-hook-form";
-import { DialogTitle } from "@headlessui/react";
-import Textbox from "../TextBox";
-import Button from "../Button";
-import ModalWrapper from "../ModalWrapper";
-import { useDispatch } from "react-redux";
-import { addUser } from "../../redux/slices/userSlice";
+import React from 'react'
+import ModalWrapper from '../ModalWrapper'
+import { useForm } from 'react-hook-form'
+import { DialogTitle } from '@headlessui/react';
+import Textbox from '../TextBox';
+import Button from '../Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteAllUsers, addUser } from '../../redux/slices/userSlice';
 
-const AddUser = ({ open, setOpen }) => {
+const EditTask = ({ open, setOpen = () => { }, defaultValues }) => {
 
+    let { name, title, email, role, _id } = defaultValues;
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { users } = useSelector(state => state.user);
     const dispatch = useDispatch();
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
 
     const handleOnSubmit = (data) => {
 
@@ -27,28 +25,29 @@ const AddUser = ({ open, setOpen }) => {
             isActive: true,
             isAdmin: data?.role === "Admin" ? true : false, 
         }
-        dispatch(addUser(newUser));
-        // console.log("user data submitted successfully", data);
-        setOpen(false);
-    };
 
-    const close = () => {
+        const oldUsers = [...users];
+        const replacingUser = oldUsers.filter(user => user._id !== _id);
+
+        const newUsers = [newUser, ...replacingUser];
+
+        dispatch(deleteAllUsers());
+        dispatch(addUser(newUsers));
         setOpen(false);
     }
 
     return (
-        <ModalWrapper open={open} close={close}>
-
+        <ModalWrapper open={open} close={() => setOpen(false)}>
             <form onSubmit={handleSubmit(handleOnSubmit)}>
                 <DialogTitle
                     as='h2'
                     className='text-base font-bold leading-6 text-gray-900 mb-4'
                 >
-                    {"ADD NEW USER"}
+                    {"Edit User"}
                 </DialogTitle>
                 <div className='mt-2 flex flex-col gap-6'>
                     <Textbox
-                        placeholder='Full name'
+                        placeholder={name ? name : "Full name"}
                         type='text'
                         name='name'
                         label='Full Name'
@@ -59,7 +58,7 @@ const AddUser = ({ open, setOpen }) => {
                         error={errors.name ? errors.name.message : ""}
                     />
                     <Textbox
-                        placeholder='Title'
+                        placeholder={title ? title : "Title"}
                         type='text'
                         name='title'
                         label='Title'
@@ -70,7 +69,7 @@ const AddUser = ({ open, setOpen }) => {
                         error={errors.title ? errors.title.message : ""}
                     />
                     <Textbox
-                        placeholder='Email Address'
+                        placeholder={email ? email : "Email Address"}
                         type='email'
                         name='email'
                         label='Email Address'
@@ -82,7 +81,7 @@ const AddUser = ({ open, setOpen }) => {
                     />
 
                     <Textbox
-                        placeholder='Role'
+                        placeholder={role ? role : "Role"}
                         type='text'
                         name='role'
                         label='Role'
@@ -99,7 +98,7 @@ const AddUser = ({ open, setOpen }) => {
                     <Button
                         type='submit'
                         className='bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700  sm:w-auto'
-                        label='Submit'
+                        label='Edit'
                     />
 
                     <Button
@@ -108,15 +107,11 @@ const AddUser = ({ open, setOpen }) => {
                         onClick={() => setOpen(false)}
                         label='Cancel'
                     />
-                </div>
+                </div>  
 
             </form>
-
         </ModalWrapper>
-
-
     )
 }
 
-export default AddUser
-
+export default EditTask

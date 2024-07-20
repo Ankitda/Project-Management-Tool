@@ -14,6 +14,7 @@ import clsx from "clsx";
 import { BGS, getInitials, PRIOTITYSTYELS, TASK_TYPE } from "../utils/utility";
 import UserInfo from "../components/UserInfo";
 import { Chart } from "../components/Chart";
+import { useSelector } from "react-redux";
 
 const TaskTable = ({ tasks }) => {
   const ICONS = {
@@ -147,34 +148,49 @@ const UserTable = ({ users }) => {
 };
 
 const Dashboard = () => {
-  const totals = summary.tasks;
+  
+  const { tasks } = useSelector((state) => state.task);
+  const { users } = useSelector((state) => state.user);
+
+  const completedTask = () => {
+    const completed = tasks.filter((task) => task.stage === "completed");
+    return completed.length;
+  }
+  const inProgress = () => {
+    const progressed = tasks.filter((task) => task.stage === "in progress");
+    return progressed.length;
+  }
+  const todo = () => {
+    const pending = tasks.filter((task) => task.stage === "todo");
+    return pending.length;
+  }
 
   const stats = [
     {
       _id: "1",
       label: "TOTAL TASK",
-      total: summary?.totalTasks || 0,
+      total: tasks.length || 0,
       icon: <FaNewspaper />,
       bg: "bg-[#1d4ed8]",
     },
     {
       _id: "2",
       label: "COMPLTED TASK",
-      total: totals["completed"] || 0,
+      total: completedTask() || 0,
       icon: <MdAdminPanelSettings />,
       bg: "bg-[#0f766e]",
     },
     {
       _id: "3",
       label: "TASK IN PROGRESS ",
-      total: totals["in progress"] || 0,
+      total: inProgress() || 0,
       icon: <LuClipboardEdit />,
       bg: "bg-[#f59e0b]",
     },
     {
       _id: "4",
       label: "TODOS",
-      total: totals["todo"],
+      total: todo() || 0,
       icon: <FaArrowsToDot />,
       bg: "bg-[#be185d]" || 0,
     },
@@ -219,11 +235,11 @@ const Dashboard = () => {
       <div className='w-full flex flex-col md:flex-row gap-4 2xl:gap-10 py-8'>
         {/* /left */}
 
-        <TaskTable tasks={summary.last10Task} />
+        <TaskTable tasks={tasks} />
 
         {/* /right */}
 
-        <UserTable users={summary.users} />
+        <UserTable users={users} />
       </div>
     </div>
   );

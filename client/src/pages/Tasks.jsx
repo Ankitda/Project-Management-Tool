@@ -20,7 +20,7 @@ const TABS = [
 const Tasks = () => {
 
   const params = useParams();
-  const { tasks } = useSelector(state => state.task);
+  const { tasks, refresh } = useSelector(state => state.task);
   const { user } = useSelector(state => state.auth);
   const [selected, setSelected] = useState(0);
   const [taskFiltered, setTaskFiltered] = useState([]);
@@ -34,7 +34,7 @@ const Tasks = () => {
     } else {
       setTaskFiltered(tasks);
     }
-  }, [params?.status])
+  }, [params?.status, refresh])
 
   return (
     <div className='w-full'>

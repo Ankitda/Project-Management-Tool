@@ -11,6 +11,9 @@ import { tasks } from "../assets/data";
 import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils/utility";
 import ConfirmationDialog from "../components/Tasks/ConfirmationDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTrashTasks, deleteAllTasks } from "../redux/slices/trashSlice";
+import { addTask } from "../redux/slices/taskSlice";
 // import AddUser from "../components/AddUser";
 // import ConfirmatioDialog from "../components/Dialogs";
 
@@ -21,34 +24,36 @@ const ICONS = {
 };
 
 const Trash = () => {
+
+  const { trashedTasks } = useSelector((state) => state.trash);
+  const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState(null);
-  const [type, setType] = useState("delete");
-  const [selected, setSelected] = useState("");
+  const [trashTaskId, setTrashTaskId] = useState("");
 
-  console.log("selected", open);
   const deleteAllClick = () => {
-    setType("deleteAll");
-    setMsg("Do you want to permenantly delete all items?");
-    setOpenDialog(true);
+    dispatch(deleteAllTasks())
   };
 
-  const restoreAllClick = () => {
-    setType("restoreAll");
-    setMsg("Do you want to restore all items in the trash?");
-    setOpenDialog(true);
+  const restoreAll = () => {
+    dispatch(addTask(trashedTasks))
+    deleteAllClick();
   };
 
-  const handleDelete = (item_id) => {
-    setOpen(true);
+  const handleDelete = () => {
+    const newTrashedTasks = trashedTasks.filter((task) => task._id !== trashTaskId);
+    dispatch(deleteTrashTasks(newTrashedTasks));
+  }
+
+  const deleteTasks = (tasksId) => {
+    setTrashTaskId(tasksId);
+    setOpenDialog(true);
   }
 
   const restoreClick = (id) => {
-    setSelected(id);
-    setType("restore");
-    setMsg("Do you want to restore the selected item?");
-    setOpenDialog(true);
+    const restoreTask = trashedTasks.filter((task) => task._id === id);
+    const newTrashedTasks = trashedTasks.filter((task) => task._id !== id);
+    dispatch(addTask(restoreTask[0]));
+    dispatch(deleteTrashTasks(newTrashedTasks));
   };
 
   const TableHeader = () => (
@@ -96,7 +101,7 @@ const Trash = () => {
         />
         <Button
           icon={<MdDelete className='text-xl text-red-600' />}
-          onClick={() => handleDelete(item._id)}
+          onClick={() => deleteTasks(item._id)}
         />
       </td>
     </tr>
@@ -111,37 +116,50 @@ const Trash = () => {
           </h2>
 
           <div className='flex gap-2 md:gap-4 items-center'>
-            <Button
-              label='Restore All'
-              icon={<MdOutlineRestore className='text-lg hidden md:flex' />}
-              className='flex flex-row-reverse gap-1 items-center  text-black text-sm md:text-base rounded-md 2xl:py-2.5'
-              onClick={() => restoreAllClick()}
-            />
-            <Button
-              label='Delete All'
-              icon={<MdDelete className='text-lg hidden md:flex' />}
-              className='flex flex-row-reverse gap-1 items-center  text-red-600 text-sm md:text-base rounded-md 2xl:py-2.5'
-              onClick={() => setOpen(true)}
-            />
+            {
+              trashedTasks?.length > 0 &&
+              <>
+                <Button
+                  label='Restore All'
+                  icon={<MdOutlineRestore className='text-lg hidden md:flex' />}
+                  className='flex flex-row-reverse gap-1 items-center  text-black text-sm md:text-base rounded-md 2xl:py-2.5'
+                  onClick={() => restoreAll()}
+                />
+                <Button
+                  label='Delete All'
+                  icon={<MdDelete className='text-lg hidden md:flex' />}
+                  className='flex flex-row-reverse gap-1 items-center  text-red-600 text-sm md:text-base rounded-md 2xl:py-2.5'
+                  onClick={deleteAllClick}
+                />
+
+              </>
+            }
           </div>
         </div>
-        <div className='bg-white px-2 md:px-6 py-4 shadow-md rounded'>
-          <div className='overflow-x-auto'>
-            <table className='w-full mb-5'>
-              <TableHeader />
-              <tbody>
-                {tasks?.map((tk, id) => (
-                  <TableRow key={id} item={tk} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+
+        {
+          trashedTasks?.length === 0 ?
+            (<div className="text-center text-gray-500">No trashed tasks found</div>)
+            :
+            (<div className='bg-white px-2 md:px-6 py-4 shadow-md rounded'>
+              <div className='overflow-x-auto'>
+                <table className='w-full'>
+                  <TableHeader />
+                  <tbody>
+                    {trashedTasks?.map((tk, id) => (
+                      <TableRow key={id} item={tk} />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>)
+        }
+
       </div>
 
       {/* <AddUser open={open} setOpen={setOpen} /> */}
 
-      <ConfirmationDialog open={open} setOpen={setOpen} />
+      <ConfirmationDialog open={openDialog} setOpen={setOpenDialog} onClick={handleDelete} />
     </>
   );
 };

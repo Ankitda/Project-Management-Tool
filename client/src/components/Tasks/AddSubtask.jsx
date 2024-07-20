@@ -4,11 +4,11 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import Textbox from "../TextBox";
 import Button from "../Button";
 import { useDispatch, useSelector } from "react-redux";
-import { addSubTasks } from "../../redux/slices/taskSlice";
+import { addSubTasks, setRefresh } from "../../redux/slices/taskSlice";
 
 const AddSubTask = ({ open, setOpen, id}) => {
 
-    const {tasks} = useSelector((state) => state.task);
+    const {tasks, refresh} = useSelector((state) => state.task);
     const dispatch = useDispatch();
     const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -35,11 +35,16 @@ const AddSubTask = ({ open, setOpen, id}) => {
             tag : data?.tag
         }
 
-        console.log(index);
+        // console.log(index);
 
         dispatch(addSubTasks({ data: newSubTask, index }));
-
+        dispatch(setRefresh(!refresh));
+        setOpen(false);
     };
+
+    const close = () => {
+        setOpen(false);
+    }
 
     return (
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import {
     MdAttachFile,
@@ -14,8 +14,6 @@ import UserInfo from "../UserInfo";
 import { IoMdAdd } from "react-icons/io";
 import AddSubTask from "./AddSubtask"
 import TaskDialog from "./TaskDialog";
-import { tasks } from "../../assets/data";
-
 
 const ICONS = {
     high: <MdKeyboardDoubleArrowUp />,
@@ -24,8 +22,14 @@ const ICONS = {
 };
 
 const TaskCard = ({ task }) => {
+
     const { user } = useSelector((state) => state.auth);
+    const { refresh } = useSelector((state) => state.task);
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        setOpen(false);
+    }, [refresh]);
 
     return (
         <>
@@ -127,7 +131,7 @@ const TaskCard = ({ task }) => {
                 }
             </div>
 
-            <AddSubTask open={open} setOpen={setOpen} id={task._id} specificTask={task} />
+            <AddSubTask open={open} setOpen={setOpen} id={task._id} />
         </>
     );
 };

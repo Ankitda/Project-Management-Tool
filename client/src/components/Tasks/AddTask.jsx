@@ -7,14 +7,15 @@ import SelectedList from "./SelectedList";
 import { BiImages } from "react-icons/bi";
 import Button from "../Button";
 import ModalWrapper from "../ModalWrapper";
-import { useDispatch } from "react-redux";
-import { addTask } from "../../redux/slices/taskSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addTask, setRefresh } from "../../redux/slices/taskSlice";
 
 const LISTS = ["TODO", "IN PROGRESS", "COMPLETED"];
 const PRIORIRY = ["HIGH", "MEDIUM", "NORMAL", "LOW"];
 
 const AddTask = ({ open, setOpen }) => {
 
+    const { refresh } = useSelector(state => state.task);
     const dispatch = useDispatch();
 
     const {
@@ -31,20 +32,22 @@ const AddTask = ({ open, setOpen }) => {
 
     const submitHandler = (data) => {
         let addNewTask = {
-            _id : Date.now(),
+            _id: Date.now(),
             title: data?.title,
             team: team,
             stage: stage.toLowerCase(),
             date: data?.date,
             priority: priority.toLowerCase(),
-            assets : [...assets],
-            activities : [],
-            isTrashed : false,
-            subTasks : []
+            assets: [...assets],
+            activities: [],
+            isTrashed: false,
+            subTasks: []
         }
         dispatch(addTask(addNewTask));
+        dispatch(setRefresh(!refresh));
         setOpen(false);
-     };
+
+    };
 
     const handleSelect = (e) => {
         setAssets(e.target.files);

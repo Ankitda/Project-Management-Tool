@@ -3,7 +3,7 @@ import Button from '../Button';
 import ModalWrapper from '../ModalWrapper';
 
 
-const ConfirmationDialog = ({ open, setOpen }) => {
+const ConfirmationDialog = ({ open, setOpen, onClick = () => { } }) => {
 
     const close = () => {
         setOpen(false);
@@ -21,7 +21,12 @@ const ConfirmationDialog = ({ open, setOpen }) => {
                 <div className='flex gap-4'>
 
                     <Button label="Cancel" onClick={close} className={'bg-slate-200 text-slate-800 rounded-md'} />
-                    <Button label="Delete" onClick={close} className={'bg-red-600 text-white rounded-md'} />
+                    <Button label="Delete"
+                        onClick={() => {
+                            onClick();
+                            close();
+                        }}
+                        className={'bg-red-600 text-white rounded-md'} />
 
                 </div>
 

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { summary } from "../../assets/data";
 
 const initialState = {
-    trashedTasks: summary.tasks,
+    trashedTasks: [],
 };
 
 const trashSlice = createSlice({
@@ -10,10 +10,18 @@ const trashSlice = createSlice({
     initialState,
     reducers: {
         addTrashTasks: (state, action) => {
-            state.trashedTasks.push(action.payload);
+            // console.log("trashed tasks : ", action.payload);
+            state.trashedTasks = [...state.trashedTasks, action.payload];
         },
+        deleteTrashTasks : (state, action) => {
+            // console.log("trashed tasks : ", action.payload);
+            state.trashedTasks = [...action.payload];
+        },
+        deleteAllTasks : (state) => {
+            state.trashedTasks = [];
+        }
     },
 })
 
-export const { addTrashTasks } = trashSlice.actions;
+export const { addTrashTasks, deleteTrashTasks, deleteAllTasks } = trashSlice.actions;
 export default trashSlice.reducer
