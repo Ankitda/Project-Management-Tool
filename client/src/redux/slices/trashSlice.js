@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { summary } from "../../assets/data";
 
 const initialState = {
     trashedTasks: [],

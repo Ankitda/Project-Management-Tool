@@ -8,6 +8,7 @@ import Users from "../pages/Users"
 import Trash from "../pages/Trash"
 import TaskDetail from "../pages/TaskDetail"
 import Login from "../pages/Login"
+import SearchFilter from "../components/SearchFilter"
 
 
 export const router = createBrowserRouter([
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
                 path: "/task/:id",
                 element: <TaskDetail />,
             },
+            {
+                path: "/search/:name",
+                element: <SearchFilter />,
+            }
         ]
     },
     {
