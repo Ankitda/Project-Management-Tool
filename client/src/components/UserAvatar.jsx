@@ -5,7 +5,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getInitials } from "../utils/utility";
-import {logout} from "../redux/slices/authSlice";
+import { logout } from "../redux/slices/authSlice";
 
 const UserAvatar = () => {
     const [open, setOpen] = useState(false);
@@ -15,73 +15,71 @@ const UserAvatar = () => {
     const navigate = useNavigate();
 
     const logoutHandler = () => {
-       dispatch(logout())
+        dispatch(logout())
     };
 
     return (
-        <>
-            <div>
-                <Menu as='div' className='relative inline-block text-left'>
-                    <div>
-                        <MenuButton className='w-10 h-10 2xl:w-12 2xl:h-12 items-center justify-center rounded-full bg-blue-600'>
-                            <span className='text-white font-semibold'>
-                                {getInitials(user?.name)}
-                            </span>
-                        </MenuButton>
-                    </div>
+        <div>
+            <Menu as='div' className='relative inline-block text-left'>
+                <div>
+                    <MenuButton className='w-10 h-10 2xl:w-12 2xl:h-12 items-center justify-center rounded-full bg-blue-600'>
+                        <span className='text-white font-semibold'>
+                            {getInitials(user?.name)}
+                        </span>
+                    </MenuButton>
+                </div>
 
-                    <Transition
-                        as={Fragment}
-                        enter='transition ease-out duration-200'
-                        enterFrom='transform opacity-0 scale-60'
-                        enterTo='transform opacity-100 scale-100'
-                        leave='transition ease-in duration-10'
-                        leaveFrom='transform opacity-100 scale-100'
-                        leaveTo='transform opacity-0 scale-95'
-                    >
-                        <MenuItems className='absolute right-0 mt-2 w-56 origin-top-right divide-gray-100 rounded-md bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none'>
-                            <div className='p-4'>
-                                <MenuItem>
+                <Transition
+                    as={Fragment}
+                    enter='transition ease-out duration-200'
+                    enterFrom='transform opacity-0 scale-60'
+                    enterTo='transform opacity-100 scale-100'
+                    leave='transition ease-in duration-10'
+                    leaveFrom='transform opacity-100 scale-100'
+                    leaveTo='transform opacity-0 scale-95'
+                >
+                    <MenuItems className='absolute right-0 mt-2 w-56 origin-top-right divide-gray-100 rounded-md bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none'>
+                        <div className='p-4'>
+                            <MenuItem>
 
-                                    <button
-                                        onClick={() => setOpen(true)}
-                                        className='text-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base'
-                                    >
-                                        <FaUser className='mr-2' aria-hidden='true' />
-                                        Profile
-                                    </button>
+                                <button
+                                    onClick={() => setOpen(true)}
+                                    className='text-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base'
+                                >
+                                    <FaUser className='mr-2' aria-hidden='true' />
+                                    Profile
+                                </button>
 
-                                </MenuItem>
+                            </MenuItem>
 
-                                <MenuItem>
+                            <MenuItem>
 
-                                    <button
-                                        onClick={() => setOpenPassword(true)}
-                                        className={`text-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base`}
-                                    >
-                                        <FaUserLock className='mr-2' aria-hidden='true' />
-                                        Change Password
-                                    </button>
+                                <button
+                                    onClick={() => setOpenPassword(true)}
+                                    className={`text-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base`}
+                                >
+                                    <FaUserLock className='mr-2' aria-hidden='true' />
+                                    Change Password
+                                </button>
 
-                                </MenuItem>
+                            </MenuItem>
 
-                                <MenuItem>
+                            <MenuItem>
 
-                                    <button
-                                        onClick={logoutHandler}
-                                        className={`text-red-600 group flex w-full items-center rounded-md px-2 py-2 text-base`}
-                                    >
-                                        <IoLogOutOutline className='mr-2' aria-hidden='true' />
-                                        Logout
-                                    </button>
+                                <button
+                                    onClick={logoutHandler}
+                                    className={`text-red-600 group flex w-full items-center rounded-md px-2 py-2 text-base`}
+                                >
+                                    <IoLogOutOutline className='mr-2' aria-hidden='true' />
+                                    Logout
+                                </button>
 
-                                </MenuItem>
-                            </div>
-                        </MenuItems>
-                    </Transition>
-                </Menu>
-            </div>
-        </>
+                            </MenuItem>
+                        </div>
+                    </MenuItems>
+                </Transition>
+            </Menu>
+        </div>
     );
 };
 

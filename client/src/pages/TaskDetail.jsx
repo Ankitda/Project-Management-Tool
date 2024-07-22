@@ -48,7 +48,7 @@ const TaskDetail = () => {
 
   useEffect(() => {
     if (id) {
-      setTaskDetail(tasks.filter((task) => task._id === id));
+      setTaskDetail(tasks.filter((task) => task._id == id));
     }
   }, [id])
 

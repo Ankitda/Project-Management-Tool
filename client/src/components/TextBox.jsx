@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 
 const Textbox = ({ type, placeholder, label, className, register, name, error }) => {

@@ -7,15 +7,12 @@ import {
   MdKeyboardDoubleArrowUp,
   MdOutlineRestore,
 } from "react-icons/md";
-import { tasks } from "../assets/data";
 import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils/utility";
 import ConfirmationDialog from "../components/Tasks/ConfirmationDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTrashTasks, deleteAllTasks } from "../redux/slices/trashSlice";
 import { addTask } from "../redux/slices/taskSlice";
-// import AddUser from "../components/AddUser";
-// import ConfirmatioDialog from "../components/Dialogs";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -156,8 +153,6 @@ const Trash = () => {
         }
 
       </div>
-
-      {/* <AddUser open={open} setOpen={setOpen} /> */}
 
       <ConfirmationDialog open={openDialog} setOpen={setOpenDialog} onClick={handleDelete} />
     </>

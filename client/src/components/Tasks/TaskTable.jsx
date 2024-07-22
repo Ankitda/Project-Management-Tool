@@ -24,6 +24,7 @@ const ICONS = {
 const TaskTable = ({ tasks }) => {
 
   const { refresh } = useSelector((state) => state.task);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const deleteClicks = (id, task) => {
@@ -115,12 +116,12 @@ const TaskTable = ({ tasks }) => {
           type='button'
         /> */}
 
-        <Button
+        {user?.isAdmin && <Button
           className='text-red-700 hover:text-red-500 sm:px-0 text-sm md:text-base'
           label='Delete'
           type='button'
           onClick={() => deleteClicks(task._id, task)}
-        />
+        />}
       </td>
     </tr>
   );

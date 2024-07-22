@@ -51,7 +51,7 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
-        const validation = /^[a-zA-Z]+$/;
+        const validation = /^[a-zA-Z\s\-]+$/;
         e.preventDefault();
         if(inputRef.current?.value && validation.test(inputRef.current.value)) {
             navigate(`/search/${inputRef.current?.value}`);

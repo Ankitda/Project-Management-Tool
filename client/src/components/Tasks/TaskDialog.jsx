@@ -5,16 +5,13 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTask, setRefresh } from '../../redux/slices/taskSlice';
 import { addTrashTasks } from '../../redux/slices/trashSlice';
-
 import { useNavigate } from "react-router-dom"
-import { useState } from 'react';
 
 const TaskDialog = ({task}) => {
     
     const { tasks, refresh } = useSelector((state) => state.task)
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
 
     const deleteClicks = () => {
         const dataDeleted = tasks.filter((el) => el._id !== task._id);
@@ -22,11 +19,6 @@ const TaskDialog = ({task}) => {
         dispatch(addTrashTasks(task));
         dispatch(setRefresh(!refresh));
     }
-
-    // const editTask = () => {
-    //     setOpen(true);
-    //     console.log(task);        
-    // }
     
     const items = [
         {
@@ -78,11 +70,7 @@ const TaskDialog = ({task}) => {
                     </MenuItem>
                 </div>
             </MenuItems>
-
-        
-
         </Menu>
-
     )
 }
 

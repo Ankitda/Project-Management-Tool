@@ -28,7 +28,6 @@ const AddUser = ({ open, setOpen }) => {
             isAdmin: data?.role === "Admin" ? true : false, 
         }
         dispatch(addUser(newUser));
-        // console.log("user data submitted successfully", data);
         setOpen(false);
     };
 
@@ -111,10 +110,7 @@ const AddUser = ({ open, setOpen }) => {
                 </div>
 
             </form>
-
         </ModalWrapper>
-
-
     )
 }
 

@@ -1,12 +1,12 @@
 import Button from "../Button";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaBug, FaThumbsUp, FaUser } from "react-icons/fa";
 import { GrInProgress } from "react-icons/gr";
 import { MdOutlineDoneAll, MdOutlineMessage } from "react-icons/md";
 import moment from "moment";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { addActivities } from "../../redux/slices/taskSlice";
+import { addActivities, addExistingActivities } from "../../redux/slices/taskSlice";
 
 const TASKTYPEICON = {
     commented: (
@@ -57,8 +57,6 @@ const Activities = ({ activity, taskId }) => {
     const { tasks, taskActivities } = useSelector((state) => state.task);
     const dispatch = useDispatch();
 
-    console.log("activities added in jsx", taskActivities.length);
-
     const displayData = (data) => {
 
         let activites = {
@@ -73,30 +71,32 @@ const Activities = ({ activity, taskId }) => {
         dispatch(addActivities({ data: activites, id: id }));
     }
 
+    useEffect(() => {
+        dispatch(addExistingActivities({ existingData: activity }));
+    }, []);
+
     const Card = ({ item }) => {
 
         return (
-            item?.map((item, index) => (
-                <div key={index} className='flex space-x-4'>
-                    <div className='flex flex-col items-center flex-shrink-0'>
-                        <div className='w-10 h-10 flex items-center justify-center'>
-                            {TASKTYPEICON[item?.type]}
-                        </div>
-                        {item?.type !== "completed" && <div className='w-0.5 h-full'>
-                            <div className='w-full bg-slate-300 h-full'></div>
-                        </div>}
+            <div className='flex space-x-4'>
+                <div className='flex flex-col items-center flex-shrink-0'>
+                    <div className='w-10 h-10 flex items-center justify-center'>
+                        {TASKTYPEICON[item?.type]}
                     </div>
-
-                    <div className='flex flex-col gap-y-1 mb-8'>
-                        <p className='font-semibold'>{item?.by?.name}</p>
-                        <div className='text-gray-500 space-y-2'>
-                            <span className='capitalize'>{item?.type} </span>
-                            <span className='text-sm'>{moment(item?.date).fromNow()}</span>
-                        </div>
-                        <div className='text-gray-700'>{item?.activity}</div>
-                    </div>
+                    {item?.type !== "completed" && <div className='w-0.5 h-full'>
+                        <div className='w-full bg-slate-300 h-full'></div>
+                    </div>}
                 </div>
-            ))
+
+                <div className='flex flex-col gap-y-1 mb-8'>
+                    <p className='font-semibold'>{item?.by?.name}</p>
+                    <div className='text-gray-500 space-y-2'>
+                        <span className='capitalize'>{item?.type} </span>
+                        <span className='text-sm'>{moment(item?.date).fromNow()}</span>
+                    </div>
+                    <div className='text-gray-700'>{item?.activity}</div>
+                </div>
+            </div>
         );
     };
 
@@ -106,49 +106,15 @@ const Activities = ({ activity, taskId }) => {
             <div className='w-full md:w-1/2'>
                 <h4 className='text-gray-600 font-semibold text-lg mb-5'>Activities</h4>
 
-                {activity && taskActivities.length === 0 ? (
-                    activity.length > 0 ? (
-                        activity?.map((item, index) => (
-                            <div key={index} className='flex space-x-4'>
-                                <div className='flex flex-col items-center flex-shrink-0'>
-                                    <div className='w-10 h-10 flex items-center justify-center'>
-                                        {TASKTYPEICON[item?.type]}
-                                    </div>
-                                    {item?.type !== "completed" && <div className='w-0.5 h-full'>
-                                        <div className='w-full bg-slate-300 h-full'></div>
-                                    </div>}
-                                </div>
-
-                                <div className='flex flex-col gap-y-1 mb-8'>
-                                    <p className='font-semibold'>{item?.by?.name}</p>
-                                    <div className='text-gray-500 space-y-2'>
-                                        <span className='capitalize'>{item?.type} </span>
-                                        <span className='text-sm'>{moment(item?.date).fromNow()}</span>
-                                    </div>
-                                    <div className='text-gray-700'>{item?.activity}</div>
-                                </div>
-                            </div>
-                        ))
-
-                    ) : (
-                        <p className='text-gray-500'>No Activities</p>
-                    )
-                ) : (
+                {
                     taskActivities?.length === 0 ? (
                         <p className='text-gray-500'>No Activities</p>
                     ) : (
-                        <div className='w-full'>
-                            {
-                                taskActivities?.map((el, index) => (
-                                    <Card
-                                        key={index}
-                                        item={el}
-                                    />
-                                ))
-                            }
-                        </div>
+                        taskActivities?.map((el, index) => (
+                            <Card key={index} item={el} />
+                        ))
                     )
-                )}
+                }
             </div>
 
             <div className='w-full md:w-1/3'>
@@ -165,7 +131,7 @@ const Activities = ({ activity, taskId }) => {
                                     type='radio'
                                     className='w-4 h-4'
                                     value={item}
-                                    {...register('checkboxInput')}
+                                    {...register('checkboxInput',{required:true})}
                                 // checked={selected === item ? true : false}
                                 // onChange={(e) => setSelected(item)}
                                 />

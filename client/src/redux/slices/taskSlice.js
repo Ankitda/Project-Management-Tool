@@ -31,11 +31,33 @@ const taskSlice = createSlice({
             }
         },
         addActivities: (state, action) => {
-            const { data, id } = action.payload;
+            const { data } = action.payload;
 
-            if (id !== -1) {
-                state.taskActivities.push([...state.tasks[id].activities, data]);
+            if (data) {
+                if (state.taskActivities.length > 0) {
+                    state.taskActivities = [...state.taskActivities, data];
+                } else {
+                    state.taskActivities.push(data);
+                }
             }
+        },
+        addExistingActivities: (state, action) => {
+            const { existingData } = action.payload;
+
+            if (state.taskActivities.length > 0 && existingData.length > 0) {
+                if (state.taskActivities[state.taskActivities.length - 1]._id === existingData[existingData.length - 1]._id) {
+                    return;
+                } else{            
+                    state.taskActivities = [...existingData]
+                }
+            } else {
+                if (existingData.length > 0) {
+                    state.taskActivities = existingData
+                } else {
+                    state.taskActivities = []
+                }
+            }
+
         },
         deleteTask: (state, action) => {
             // console.log("task deleted", action.payload);
@@ -48,6 +70,6 @@ const taskSlice = createSlice({
     }
 });
 
-export const { addTask, addSubTasks, addActivities, deleteTask, setRefresh } = taskSlice.actions;
+export const { addTask, addSubTasks, addActivities, deleteTask, setRefresh, addExistingActivities } = taskSlice.actions;
 
 export default taskSlice.reducer;
