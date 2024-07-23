@@ -36,7 +36,7 @@ const MobileSidebar = () => {
                         )}
                         onClick={() => closeSidebar()}
                     >
-                        <div className='bg-white w-3/4 h-full'>
+                        <div className='bg-white w-[80%] h-full'>
 
                             <div className='w-full flex justify-end px-5 py-10'>
                                 <IoClose size={25} />
